@@ -131,10 +131,9 @@ module.exports = function server(port, opts) {
 
             // https://github.com/apache/cordova-lib/blob/master/cordova-lib/src/cordova/serve.js
             server.app.put('/' + platform + '/*', function (req, res, next) {
-              var file = './' + req.url.split('/').slice(2).join('/')
+              var file = locations.www + '/../..' + url.parse(req.url).pathname;
               var	stream = fs.createWriteStream(file);
-              // console.log('Accessing the secret section ...');
-              // console.log(url.parse(req.url).pathname);
+
               stream.on('error', function(error) {
                 res.writeHead(400, {'Content-Type' : 'text/plain',
                                     'Access-Control-Allow-Origin' : '*'});
@@ -149,6 +148,7 @@ module.exports = function server(port, opts) {
               });
               req.setEncoding('utf8');
               req.on('data', function(data) {
+                //console.log(data);
                 stream.write(data);
               });
               req.on('end', function() {
